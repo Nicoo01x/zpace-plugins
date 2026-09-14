@@ -1,4 +1,8 @@
+# Pull requests: validate every manifest and the index. Pushes to main: rebuild plugins.json and commit it
+# (the Actions app bypasses the branch rules for exactly that).
 name: plugins
+permissions:
+  contents: read
 on:
   pull_request:
     paths: ['plugins/**', 'scripts/**']
