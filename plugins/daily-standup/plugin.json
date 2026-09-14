@@ -1,0 +1,48 @@
+{
+  "id": "daily-standup",
+  "name": "Daily Standup",
+  "version": "1.0.0",
+  "description": "Two palette commands: what you did since yesterday (from git and the sessions) as a standup note, and a plan for today.",
+  "author": {
+    "name": "Nicolás Cabanillas",
+    "github": "Nicoo01x"
+  },
+  "icon": "icon.svg",
+  "tags": [
+    "command"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "id": "yesterday",
+        "title": "Standup: what I did since yesterday",
+        "keywords": [
+          "standup",
+          "daily",
+          "yesterday",
+          "report"
+        ],
+        "action": {
+          "kind": "prompt",
+          "session": "new",
+          "text": "Write my standup note. Run `git log --since=yesterday --oneline` and `git diff --stat HEAD~5` in this project, then summarise in three bullets: done, in progress, blockers. Plain text, no headings."
+        }
+      },
+      {
+        "id": "today",
+        "title": "Standup: plan for today",
+        "keywords": [
+          "standup",
+          "daily",
+          "plan",
+          "today"
+        ],
+        "action": {
+          "kind": "prompt",
+          "session": "new",
+          "text": "Look at the open TODO and FIXME comments in the source (grep, at most 40 lines) and the last 10 commits, and propose a plan for today: three items, one line each, most valuable first."
+        }
+      }
+    ]
+  }
+}

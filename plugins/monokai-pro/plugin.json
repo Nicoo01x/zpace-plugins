@@ -1,0 +1,21 @@
+{
+  "id": "monokai-pro",
+  "name": "Monokai Pro",
+  "version": "1.0.0",
+  "description": "The Monokai Pro palette: warm greys, yellow accents, the classic editor colours.",
+  "author": { "name": "Nicolás Cabanillas", "github": "Nicoo01x" },
+  "icon": "icon.svg",
+  "tags": ["theme"],
+  "contributes": {
+    "themes": [
+      {
+        "id": "main",
+        "label": "Monokai Pro",
+        "appearance": "dark",
+        "colors": { "canvas": "#221f22", "background": "#2d2a2e", "surface": "#403e41", "textPrimary": "#fcfcfa", "textSecondary": "#939293", "border": "#403e41", "accent": "#ffd866", "accentWarm": "#fc9867" },
+        "scheme": "monokai",
+        "editor": { "background": "#2d2a2e", "foreground": "#fcfcfa", "selection": "#5b595c", "lineHighlight": "#363337", "comment": "#727072" }
+      }
+    ]
+  }
+}

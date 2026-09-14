@@ -1,0 +1,16 @@
+{
+  "id": "conventional-commits",
+  "name": "Conventional Commits",
+  "version": "1.0.0",
+  "description": "A Claude Code skill that writes commit messages in the Conventional Commits format from what is staged, plus a palette command that asks for one.",
+  "author": { "name": "Nicolás Cabanillas", "github": "Nicoo01x" },
+  "icon": "icon.svg",
+  "homepage": "https://www.conventionalcommits.org",
+  "tags": ["skill", "command"],
+  "contributes": {
+    "skills": [{ "name": "conventional-commits", "path": "skills/conventional-commits" }],
+    "commands": [
+      { "id": "write", "title": "Commit message: write one from the staged changes", "keywords": ["commit", "git", "message"], "action": { "kind": "prompt", "text": "/conventional-commits Look at what is staged (git diff --staged) and propose one Conventional Commits message: type(scope): subject, a blank line, then a short body if it helps. Only the message, in a code block." } }
+    ]
+  }
+}

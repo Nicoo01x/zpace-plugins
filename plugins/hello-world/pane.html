@@ -1,0 +1,20 @@
+<!-- A plugin pane: plain HTML in a sandboxed iframe. Zpace injects its colours as CSS variables
+     (--background, --surface, --text-primary, --text-secondary, --accent, --border) and listens to
+     parent.postMessage({ zpace: 'notify', title, summary }) and ({ zpace: 'command', id }). -->
+<style>
+  main { padding: 28px; max-width: 520px; font-size: 14px; line-height: 1.5; }
+  h1 { font-size: 22px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  p { color: var(--text-secondary); margin: 0 0 18px; }
+  code { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  button { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+</style>
+<main>
+  <h1>Hello from a plugin pane</h1>
+  <p>This page ships with the plugin (<code>pane.html</code>). It runs sandboxed, but it can talk to Zpace.</p>
+  <div class="row">
+    <button class="primary" onclick="parent.postMessage({ zpace: 'notify', title: 'Hello from the pane', summary: 'Sent with postMessage' }, '*')">Notify</button>
+    <button onclick="parent.postMessage({ zpace: 'command', id: 'hi' }, '*')">Run the “say hi” command</button>
+  </div>
+</main>

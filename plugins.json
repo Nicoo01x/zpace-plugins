@@ -1,0 +1,307 @@
+{
+  "updated": "2026-09-14T02:36:32.704Z",
+  "plugins": [
+    {
+      "id": "code-reviewer",
+      "name": "Code Reviewer",
+      "version": "1.0.0",
+      "description": "A ready-made Zpace agent: a strict, kind reviewer that reads diffs, flags real bugs first, and never rewrites your style. Put it in a room with your other agents.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "tags": [
+        "agent"
+      ],
+      "contributes": {
+        "agents": [
+          {
+            "name": "Reviewer",
+            "shape": "hexagone",
+            "color": "#3fae6b",
+            "expression": "curieux",
+            "model": "sonnet",
+            "instructions": "You are a code reviewer. You read the change, understand the intent, and report what would actually break or mislead, most severe first. You do not restyle code, you do not nitpick naming unless it hides a bug, and you say plainly when a change is fine.",
+            "rules": "Bugs and data loss before everything else.\nOne finding per line: file:line — what happens — how to fix.\nNo rewrites of the author's style.\nIf there is nothing serious, say so in one sentence.",
+            "allowedTools": "Read\nGrep\nGlob\nBash(git diff*)\nBash(git log*)",
+            "permissionMode": "plan"
+          }
+        ]
+      },
+      "path": "plugins/code-reviewer",
+      "files": [
+        "icon.svg",
+        "plugin.json"
+      ]
+    },
+    {
+      "id": "conventional-commits",
+      "name": "Conventional Commits",
+      "version": "1.0.0",
+      "description": "A Claude Code skill that writes commit messages in the Conventional Commits format from what is staged, plus a palette command that asks for one.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "homepage": "https://www.conventionalcommits.org",
+      "tags": [
+        "skill",
+        "command"
+      ],
+      "contributes": {
+        "skills": [
+          {
+            "name": "conventional-commits",
+            "path": "skills/conventional-commits"
+          }
+        ],
+        "commands": [
+          {
+            "id": "write",
+            "title": "Commit message: write one from the staged changes",
+            "keywords": [
+              "commit",
+              "git",
+              "message"
+            ],
+            "action": {
+              "kind": "prompt",
+              "text": "/conventional-commits Look at what is staged (git diff --staged) and propose one Conventional Commits message: type(scope): subject, a blank line, then a short body if it helps. Only the message, in a code block."
+            }
+          }
+        ]
+      },
+      "path": "plugins/conventional-commits",
+      "files": [
+        "icon.svg",
+        "plugin.json",
+        "skills/conventional-commits/SKILL.md"
+      ]
+    },
+    {
+      "id": "daily-standup",
+      "name": "Daily Standup",
+      "version": "1.0.0",
+      "description": "Two palette commands: what you did since yesterday (from git and the sessions) as a standup note, and a plan for today.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "tags": [
+        "command"
+      ],
+      "contributes": {
+        "commands": [
+          {
+            "id": "yesterday",
+            "title": "Standup: what I did since yesterday",
+            "keywords": [
+              "standup",
+              "daily",
+              "yesterday",
+              "report"
+            ],
+            "action": {
+              "kind": "prompt",
+              "session": "new",
+              "text": "Write my standup note. Run `git log --since=yesterday --oneline` and `git diff --stat HEAD~5` in this project, then summarise in three bullets: done, in progress, blockers. Plain text, no headings."
+            }
+          },
+          {
+            "id": "today",
+            "title": "Standup: plan for today",
+            "keywords": [
+              "standup",
+              "daily",
+              "plan",
+              "today"
+            ],
+            "action": {
+              "kind": "prompt",
+              "session": "new",
+              "text": "Look at the open TODO and FIXME comments in the source (grep, at most 40 lines) and the last 10 commits, and propose a plan for today: three items, one line each, most valuable first."
+            }
+          }
+        ]
+      },
+      "path": "plugins/daily-standup",
+      "files": [
+        "icon.svg",
+        "plugin.json"
+      ]
+    },
+    {
+      "id": "hello-world",
+      "name": "Hello World",
+      "version": "1.0.0",
+      "description": "The template. A script that registers a palette command, listens to finished sessions, keeps a counter, and opens a small pane. Copy this folder to start your own plugin.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "homepage": "https://github.com/Nicoo01x/zpace-plugins/tree/main/plugins/hello-world",
+      "tags": [
+        "script",
+        "pane",
+        "command"
+      ],
+      "permissions": [
+        "commands",
+        "notifications",
+        "events",
+        "panes"
+      ],
+      "contributes": {
+        "commands": [
+          {
+            "id": "open",
+            "title": "Hello World: open the pane",
+            "keywords": [
+              "hello",
+              "example"
+            ],
+            "action": {
+              "kind": "pane",
+              "pane": "hello"
+            }
+          }
+        ],
+        "panes": [
+          {
+            "id": "hello",
+            "title": "Hello World",
+            "entry": "pane.html"
+          }
+        ]
+      },
+      "main": "main.js",
+      "path": "plugins/hello-world",
+      "files": [
+        "icon.svg",
+        "main.js",
+        "pane.html",
+        "plugin.json"
+      ]
+    },
+    {
+      "id": "monokai-pro",
+      "name": "Monokai Pro",
+      "version": "1.0.0",
+      "description": "The Monokai Pro palette: warm greys, yellow accents, the classic editor colours.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "tags": [
+        "theme"
+      ],
+      "contributes": {
+        "themes": [
+          {
+            "id": "main",
+            "label": "Monokai Pro",
+            "appearance": "dark",
+            "colors": {
+              "canvas": "#221f22",
+              "background": "#2d2a2e",
+              "surface": "#403e41",
+              "textPrimary": "#fcfcfa",
+              "textSecondary": "#939293",
+              "border": "#403e41",
+              "accent": "#ffd866",
+              "accentWarm": "#fc9867"
+            },
+            "scheme": "monokai",
+            "editor": {
+              "background": "#2d2a2e",
+              "foreground": "#fcfcfa",
+              "selection": "#5b595c",
+              "lineHighlight": "#363337",
+              "comment": "#727072"
+            }
+          }
+        ]
+      },
+      "path": "plugins/monokai-pro",
+      "files": [
+        "icon.svg",
+        "plugin.json"
+      ]
+    },
+    {
+      "id": "rose-pine",
+      "name": "Rosé Pine",
+      "version": "1.0.0",
+      "description": "All natural pine, faux fur and a bit of soho vibes for the classy minimalist — the Rosé Pine palette, main and Dawn.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "homepage": "https://rosepinetheme.com",
+      "tags": [
+        "theme"
+      ],
+      "contributes": {
+        "themes": [
+          {
+            "id": "main",
+            "label": "Rosé Pine",
+            "appearance": "dark",
+            "colors": {
+              "canvas": "#191724",
+              "background": "#1f1d2e",
+              "surface": "#26233a",
+              "textPrimary": "#e0def4",
+              "textSecondary": "#908caa",
+              "border": "#26233a",
+              "accent": "#c4a7e7",
+              "accentWarm": "#ebbcba"
+            },
+            "scheme": "tokyo-night",
+            "editor": {
+              "background": "#191724",
+              "foreground": "#e0def4",
+              "selection": "#403d52",
+              "lineHighlight": "#1f1d2e",
+              "comment": "#6e6a86"
+            }
+          },
+          {
+            "id": "dawn",
+            "label": "Rosé Pine Dawn",
+            "appearance": "light",
+            "colors": {
+              "canvas": "#faf4ed",
+              "background": "#fffaf3",
+              "surface": "#f2e9e1",
+              "textPrimary": "#575279",
+              "textSecondary": "#797593",
+              "border": "#dfdad9",
+              "accent": "#907aa9",
+              "accentWarm": "#d7827e"
+            },
+            "scheme": "solarized-light",
+            "editor": {
+              "background": "#faf4ed",
+              "foreground": "#575279",
+              "selection": "#dfdad9",
+              "lineHighlight": "#fffaf3",
+              "comment": "#9893a5"
+            }
+          }
+        ]
+      },
+      "path": "plugins/rose-pine",
+      "files": [
+        "icon.svg",
+        "plugin.json"
+      ]
+    }
+  ]
+}

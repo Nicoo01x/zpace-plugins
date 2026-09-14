@@ -1,0 +1,30 @@
+{
+  "id": "rose-pine",
+  "name": "Rosé Pine",
+  "version": "1.0.0",
+  "description": "All natural pine, faux fur and a bit of soho vibes for the classy minimalist — the Rosé Pine palette, main and Dawn.",
+  "author": { "name": "Nicolás Cabanillas", "github": "Nicoo01x" },
+  "icon": "icon.svg",
+  "homepage": "https://rosepinetheme.com",
+  "tags": ["theme"],
+  "contributes": {
+    "themes": [
+      {
+        "id": "main",
+        "label": "Rosé Pine",
+        "appearance": "dark",
+        "colors": { "canvas": "#191724", "background": "#1f1d2e", "surface": "#26233a", "textPrimary": "#e0def4", "textSecondary": "#908caa", "border": "#26233a", "accent": "#c4a7e7", "accentWarm": "#ebbcba" },
+        "scheme": "tokyo-night",
+        "editor": { "background": "#191724", "foreground": "#e0def4", "selection": "#403d52", "lineHighlight": "#1f1d2e", "comment": "#6e6a86" }
+      },
+      {
+        "id": "dawn",
+        "label": "Rosé Pine Dawn",
+        "appearance": "light",
+        "colors": { "canvas": "#faf4ed", "background": "#fffaf3", "surface": "#f2e9e1", "textPrimary": "#575279", "textSecondary": "#797593", "border": "#dfdad9", "accent": "#907aa9", "accentWarm": "#d7827e" },
+        "scheme": "solarized-light",
+        "editor": { "background": "#faf4ed", "foreground": "#575279", "selection": "#dfdad9", "lineHighlight": "#fffaf3", "comment": "#9893a5" }
+      }
+    ]
+  }
+}
