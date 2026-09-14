@@ -409,8 +409,8 @@
     {
       "id": "now-playing",
       "name": "Now Playing",
-      "version": "1.0.1",
-      "description": "What is playing on your machine — Spotify, YouTube, any player — with the cover, the track and play/pause/next in a pane, and the track in the island while it plays.",
+      "version": "1.0.2",
+      "description": "What is playing on your machine — Spotify, YouTube, any player. The track sits in the island; click it for the cover and play/pause/next right there, or open the full player pane.",
       "author": {
         "name": "Nicolás Cabanillas",
         "github": "Nicoo01x"

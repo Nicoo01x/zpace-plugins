@@ -10,7 +10,7 @@ A plugin is a folder. No build step, no upload: you open a pull request, CI vali
 | --- | --- |
 | **Boards** (`kanban`) | A Trello-style board per project, wired to Zpace notes. |
 | **Focus Timer** | Pomodoro in the island — the countdown next to the Zpace mark. |
-| **Now Playing** | Spotify / any player: cover, track, play/pause/next, the track in the island. |
+| **Now Playing** | Spotify / any player: the track in the island; click it for the cover and play/pause/next right there. |
 | **Calendar** | Month view, reminders ten minutes before, a note per event. |
 | **Weather** | Now, the next hours, the week — Open-Meteo, no key. Temperature in the island. |
 | **Code Reviewer** | A ready-made review agent for your rooms. |
@@ -37,7 +37,7 @@ To update, bump `version` and open another pull request; the app offers the upda
 | `contributes.commands` | Palette entries. `action.kind`: `prompt` (sends text to Claude, in the active session or a new one), `shell` (runs a command in the project, result in the island), `url`, `pane`. |
 | `contributes.agents` | Ready-made Zpace agents (persona, rules, allowed tools, model). Created on install, removed on uninstall. |
 | `contributes.skills` | Claude Code skills — a folder with a `SKILL.md`, copied to `~/.claude/skills/<name>`. |
-| `contributes.panes` | HTML pages opened as workspace panes (sandboxed iframe, themed with the app's CSS variables). |
+| `contributes.panes` | HTML pages opened as workspace panes (sandboxed iframe, themed with the app's CSS variables). Installed plugins are listed in the sidebar (Plugins): a click opens the first pane, or runs the first command when there is no pane. |
 | `main` | A script, `activate(zpace)`, for everything else — see the API below. Its `permissions` are shown before install. |
 
 `plugins/hello-world` uses most of it and is the template.
@@ -79,6 +79,7 @@ export function activate(zpace) {
 | `zpace.commands.register({ id, title, keywords?, run })` | `commands` | Adds a palette command; returns a disposer. |
 | `zpace.notify({ title, summary?, variant?, sticky?, action? })` | `notifications` | A notification in the island; returns its id. `zpace.notifications.update(id, patch)` / `.remove(id)`. |
 | `zpace.island.set({ icon?, text, title?, color?, onClick? })` / `.set(null)` | `notifications` | A live readout in the compact island (a countdown, the track playing). |
+| `zpace.island.show({ title, lines?, image?, buttons?, foldMs? })` → id / `.update(id, card)` / `.hide(id)` | `notifications` | A card that unfolds in the island: a round image at the left (a cover, a data URL or https), the title, more lines, a row of buttons (`{ label, run, primary? }`). It folds after `foldMs` (8 s) — the natural thing to show when your readout is clicked. |
 | `zpace.panes.open(paneId)` / `zpace.panes.openHtml(title, html)` / `zpace.panes.postMessage(msg)` | `panes` | Opens a pane from `contributes.panes` or ad-hoc HTML; posts to the open ones. |
 | `zpace.notes.list({ project? })` / `.read(id)` / `.create({ title, body?, tags? })` / `.update(id, patch)` / `.open(id)` | `notes` | Zpace notes. |
 | `zpace.media.now()` / `zpace.media.control('play' | 'pause' | 'toggle' | 'next' | 'previous')` | `media` | The system media session (Spotify, browsers, any player): title, artist, album, cover, position. |
