@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-14T18:30:43-03:00",
+  "updated": "2026-09-14T19:02:13-03:00",
   "plugins": [
     {
       "id": "calendar",
       "name": "Calendar",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "description": "A month view with your events, reminders in the island ten minutes before, and a note for any event in one click — kept on this machine, no account.",
       "author": {
         "name": "Nicolás Cabanillas",
@@ -56,7 +56,7 @@
         "pane.html",
         "plugin.json"
       ],
-      "updated": "2026-09-14T17:19:01-03:00"
+      "updated": "2026-09-14T19:02:13-03:00"
     },
     {
       "id": "code-reviewer",
@@ -196,8 +196,8 @@
     {
       "id": "focus-timer",
       "name": "Focus Timer",
-      "version": "1.0.1",
-      "description": "A Pomodoro timer that lives in the island: the countdown ticks next to the Zpace mark, the island tells you when a block ends, and the pane keeps your sessions for the day.",
+      "version": "1.1.0",
+      "description": "A focus timer that lives in the island: the countdown next to the Zpace mark, a click for pause / resume / reset, any length you want, and the pane keeps your blocks for the day.",
       "author": {
         "name": "Nicolás Cabanillas",
         "github": "Nicoo01x"
@@ -247,7 +247,7 @@
         "pane.html",
         "plugin.json"
       ],
-      "updated": "2026-09-14T17:19:01-03:00"
+      "updated": "2026-09-14T19:02:13-03:00"
     },
     {
       "id": "hello-world",
