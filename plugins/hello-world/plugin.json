@@ -1,8 +1,8 @@
 {
   "id": "hello-world",
   "name": "Hello World",
-  "version": "1.0.0",
-  "description": "The template. A script that registers a palette command, listens to finished sessions, keeps a counter, and opens a small pane. Copy this folder to start your own plugin.",
+  "version": "1.0.1",
+  "description": "The template. A script that registers a palette command, listens to finished sessions, keeps a counter, opens a small pane and puts a readout in the island. Copy this folder to start your own plugin.",
   "author": { "name": "Nicolás Cabanillas", "github": "Nicoo01x" },
   "icon": "icon.svg",
   "homepage": "https://github.com/Nicoo01x/zpace-plugins/tree/main/plugins/hello-world",
