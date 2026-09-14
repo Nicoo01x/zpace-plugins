@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-14T02:36:32.704Z",
+  "updated": "2026-09-14T02:37:17.533Z",
   "plugins": [
     {
       "id": "code-reviewer",
@@ -33,7 +33,8 @@
       "files": [
         "icon.svg",
         "plugin.json"
-      ]
+      ],
+      "updated": "2026-09-13T23:37:17-03:00"
     },
     {
       "id": "conventional-commits",
@@ -78,7 +79,8 @@
         "icon.svg",
         "plugin.json",
         "skills/conventional-commits/SKILL.md"
-      ]
+      ],
+      "updated": "2026-09-13T23:37:17-03:00"
     },
     {
       "id": "daily-standup",
@@ -131,7 +133,8 @@
       "files": [
         "icon.svg",
         "plugin.json"
-      ]
+      ],
+      "updated": "2026-09-13T23:37:17-03:00"
     },
     {
       "id": "hello-world",
@@ -185,7 +188,8 @@
         "main.js",
         "pane.html",
         "plugin.json"
-      ]
+      ],
+      "updated": "2026-09-13T23:37:17-03:00"
     },
     {
       "id": "monokai-pro",
@@ -231,7 +235,8 @@
       "files": [
         "icon.svg",
         "plugin.json"
-      ]
+      ],
+      "updated": "2026-09-13T23:37:17-03:00"
     },
     {
       "id": "rose-pine",
@@ -301,7 +306,8 @@
       "files": [
         "icon.svg",
         "plugin.json"
-      ]
+      ],
+      "updated": "2026-09-13T23:37:17-03:00"
     }
   ]
 }
