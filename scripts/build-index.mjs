@@ -9,6 +9,8 @@ import { execSync } from 'node:child_process';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PLUGINS = path.join(ROOT, 'plugins');
 const TEXT = /\.(json|js|mjs|css|html|htm|md|txt|svg|yml|yaml|toml)$/i;
+const IMAGE = /\.(png|jpe?g|webp|gif)$/i;
+const MAX_IMAGE = 1536 * 1024;
 const ID = /^[a-z0-9][a-z0-9-]{1,48}$/;
 const SEMVER = /^\d+\.\d+\.\d+([-+][\w.-]+)?$/;
 const PERMISSIONS = ['commands', 'panes', 'events', 'agents', 'shell', 'files', 'network', 'notifications', 'clipboard', 'notes', 'media'];
@@ -48,6 +50,11 @@ for (const dir of dirs) {
   if (m.main && !fs.existsSync(path.join(folder, m.main))) at(`main: ${m.main} not found`);
   if (m.icon && !fs.existsSync(path.join(folder, m.icon))) at(`icon: ${m.icon} not found`);
   if (m.icon && !/\.svg$/i.test(m.icon)) at('icon: must be an .svg');
+  for (const sh of m.screenshots ?? []) {
+    if (!IMAGE.test(sh) || sh.includes('..')) at(`screenshots: "${sh}" must be a png/jpg/webp/gif in the folder`);
+    else if (!fs.existsSync(path.join(folder, sh))) at(`screenshots: ${sh} not found`);
+    else if (fs.statSync(path.join(folder, sh)).size > MAX_IMAGE) at(`screenshots: ${sh} over 1.5 MB`);
+  }
   for (const pane of m.contributes?.panes ?? []) if (!fs.existsSync(path.join(folder, pane.entry ?? ''))) at(`panes: ${pane.entry} not found`);
   for (const sk of m.contributes?.skills ?? []) if (!fs.existsSync(path.join(folder, sk.path ?? '', 'SKILL.md'))) at(`skills: ${sk.path}/SKILL.md not found`);
   for (const cmd of m.contributes?.commands ?? []) if (!cmd.id || !cmd.title || !cmd.action?.kind) at(`commands: "${cmd.id ?? '?'}" needs id, title and action`);
@@ -61,8 +68,9 @@ for (const dir of dirs) {
         walk(path.join(d, e.name), r);
         continue;
       }
+      if (IMAGE.test(e.name)) continue; // pictures stay in the repo (the card shows them from here)
       if (!TEXT.test(e.name)) {
-        at(`${r}: only text files (json/js/css/html/md/svg/yml) ship in a plugin`);
+        at(`${r}: only text files (json/js/css/html/md/svg/yml) and pictures (png/jpg/webp/gif) belong in a plugin`);
         continue;
       }
       if (fs.statSync(path.join(d, e.name)).size > MAX_FILE) at(`${r}: over 512 KB`);

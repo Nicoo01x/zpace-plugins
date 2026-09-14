@@ -23,7 +23,7 @@ A plugin is a folder. No build step, no upload: you open a pull request, CI vali
 
 1. Fork this repo and copy `plugins/hello-world` to `plugins/<your-id>` (lowercase, dashes).
 2. Edit `plugin.json` — `id` must equal the folder name; put your GitHub login in `author.github` (that is where the avatar and the link come from).
-3. Keep only text files in the folder (`.json .js .css .html .md .svg .yml`), each under 512 KB. Icons are SVG.
+3. Keep only text files in the folder (`.json .js .css .html .md .svg .yml`), each under 512 KB. Icons are SVG. Pictures of the plugin (`.png .jpg .webp .gif`, up to 1.5 MB each) go in the folder too and are listed in `"screenshots"` — the card shows them straight from the repo.
 4. `node scripts/build-index.mjs --check` — the same check CI runs.
 5. Open the pull request. When it is merged, `plugins.json` is rebuilt and the plugin is live.
 
@@ -52,6 +52,7 @@ To update, bump `version` and open another pull request; the app offers the upda
   "description": "One or two sentences. Up to 300 characters.",
   "author": { "name": "Your Name", "github": "your-login" },
   "icon": "icon.svg",
+  "screenshots": ["screenshot.png"],
   "homepage": "https://…",
   "tags": ["theme", "command"],
   "permissions": ["commands", "notifications"],
