@@ -91,7 +91,8 @@ if (problems.length) {
   console.error(problems.map((p) => `x ${p}`).join('\n'));
   process.exit(1);
 }
-const index = { updated: new Date().toISOString(), plugins: entries };
+// deterministic: the index's date is the newest plugin's, so rebuilding without changes changes nothing
+const index = { updated: entries.map((e) => e.updated).filter(Boolean).sort().at(-1) ?? new Date().toISOString(), plugins: entries };
 if (process.argv.includes('--check')) {
   console.log(`ok: ${entries.length} plugins valid`);
 } else {

@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-14T20:17:46.127Z",
+  "updated": "2026-09-14T17:17:46-03:00",
   "plugins": [
     {
       "id": "calendar",
@@ -56,7 +56,7 @@
         "pane.html",
         "plugin.json"
       ],
-      "updated": "2026-09-14T00:17:31-03:00"
+      "updated": "2026-09-14T17:17:46-03:00"
     },
     {
       "id": "code-reviewer",
@@ -247,7 +247,7 @@
         "pane.html",
         "plugin.json"
       ],
-      "updated": "2026-09-14T00:17:31-03:00"
+      "updated": "2026-09-14T17:17:46-03:00"
     },
     {
       "id": "hello-world",
@@ -462,7 +462,7 @@
         "pane.html",
         "plugin.json"
       ],
-      "updated": "2026-09-14T00:17:31-03:00"
+      "updated": "2026-09-14T17:17:46-03:00"
     },
     {
       "id": "rose-pine",
