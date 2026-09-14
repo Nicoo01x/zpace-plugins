@@ -3,12 +3,11 @@
 name: plugins
 permissions:
   contents: read
+# No path filter: "validate" is a required check, so it must report on every pull request.
 on:
   pull_request:
-    paths: ['plugins/**', 'scripts/**']
   push:
     branches: [main]
-    paths: ['plugins/**', 'scripts/**']
 jobs:
   validate:
     runs-on: ubuntu-latest
