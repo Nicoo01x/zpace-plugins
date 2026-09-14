@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-14T17:30:00-03:00",
+  "updated": "2026-09-14T18:30:43-03:00",
   "plugins": [
     {
       "id": "calendar",
@@ -252,8 +252,8 @@
     {
       "id": "hello-world",
       "name": "Hello World",
-      "version": "1.0.0",
-      "description": "The template. A script that registers a palette command, listens to finished sessions, keeps a counter, and opens a small pane. Copy this folder to start your own plugin.",
+      "version": "1.0.1",
+      "description": "The template. A script that registers a palette command, listens to finished sessions, keeps a counter, opens a small pane and puts a readout in the island. Copy this folder to start your own plugin.",
       "author": {
         "name": "Nicolás Cabanillas",
         "github": "Nicoo01x"
@@ -302,7 +302,7 @@
         "pane.html",
         "plugin.json"
       ],
-      "updated": "2026-09-14T00:17:31-03:00"
+      "updated": "2026-09-14T18:30:43-03:00"
     },
     {
       "id": "kanban",
