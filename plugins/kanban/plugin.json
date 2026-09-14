@@ -1,0 +1,14 @@
+{
+  "id": "kanban",
+  "name": "Boards",
+  "version": "1.0.0",
+  "description": "A Trello-style board per project — columns, cards, drag and drop — wired to Zpace notes: turn any note into a card, save any card as a note, open it from the card.",
+  "author": { "name": "Nicolás Cabanillas", "github": "Nicoo01x" },
+  "icon": "icon.svg",
+  "tags": ["pane", "command"],
+  "permissions": ["panes", "notes", "notifications", "commands", "events"],
+  "contributes": {
+    "commands": [{ "id": "open", "title": "Boards: open the project board", "keywords": ["kanban", "board", "trello", "tablero", "cards"], "action": { "kind": "pane", "pane": "board" } }],
+    "panes": [{ "id": "board", "title": "Board", "entry": "pane.html" }]
+  }
+}

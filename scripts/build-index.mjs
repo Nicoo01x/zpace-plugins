@@ -11,7 +11,7 @@ const PLUGINS = path.join(ROOT, 'plugins');
 const TEXT = /\.(json|js|mjs|css|html|htm|md|txt|svg|yml|yaml|toml)$/i;
 const ID = /^[a-z0-9][a-z0-9-]{1,48}$/;
 const SEMVER = /^\d+\.\d+\.\d+([-+][\w.-]+)?$/;
-const PERMISSIONS = ['commands', 'panes', 'events', 'agents', 'shell', 'files', 'network', 'notifications', 'clipboard'];
+const PERMISSIONS = ['commands', 'panes', 'events', 'agents', 'shell', 'files', 'network', 'notifications', 'clipboard', 'notes', 'media'];
 const MAX_FILE = 512 * 1024;
 
 const problems = [];

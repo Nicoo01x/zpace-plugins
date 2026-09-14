@@ -1,0 +1,17 @@
+{
+  "id": "now-playing",
+  "name": "Now Playing",
+  "version": "1.0.0",
+  "description": "What is playing on your machine — Spotify, YouTube, any player — with the cover, the track and play/pause/next in a pane, and the track in the island while it plays.",
+  "author": { "name": "Nicolás Cabanillas", "github": "Nicoo01x" },
+  "icon": "icon.svg",
+  "tags": ["script", "pane", "command"],
+  "permissions": ["media", "commands", "notifications", "panes", "events"],
+  "contributes": {
+    "commands": [
+      { "id": "open", "title": "Music: open Now Playing", "keywords": ["spotify", "music", "musica", "player", "now playing"], "action": { "kind": "pane", "pane": "player" } }
+    ],
+    "panes": [{ "id": "player", "title": "Now Playing", "entry": "pane.html" }]
+  },
+  "main": "main.js"
+}

@@ -1,0 +1,63 @@
+<style>
+  * { box-sizing: border-box; }
+  body { display: flex; align-items: center; justify-content: center; height: 100%; overflow: hidden; }
+  .bg { position: fixed; inset: -60px; background-size: cover; background-position: center; filter: blur(60px) saturate(1.3); opacity: 0; transition: opacity 0.8s; }
+  .bg.on { opacity: 0.35; }
+  main { position: relative; width: 380px; text-align: center; }
+  .cover { width: 260px; height: 260px; border-radius: 18px; margin: 0 auto 22px; background: var(--surface-inset); box-shadow: 0 30px 60px rgba(0,0,0,0.25); object-fit: cover; display: block; transition: transform 0.5s cubic-bezier(.2,.8,.2,1); }
+  .cover.paused { transform: scale(0.94); }
+  .cover.empty { display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--text-muted); }
+  h1 { font-size: 19px; margin: 0; letter-spacing: -0.015em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .artist { color: var(--text-secondary); font-size: 13.5px; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .app { color: var(--text-muted); font-size: 11px; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .bar { height: 4px; border-radius: 2px; background: var(--surface-inset); margin: 20px 20px 6px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width 1s linear; }
+  .times { display: flex; justify-content: space-between; margin: 0 20px; font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .controls { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 18px; }
+  .controls button { font: inherit; border: 0; background: var(--surface); color: var(--text-primary); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; box-shadow: inset 0 0 0 1px var(--border); }
+  .controls button.main { width: 58px; height: 58px; background: var(--accent); color: #fff; box-shadow: none; font-size: 20px; }
+  .controls button:hover { box-shadow: inset 0 0 0 1px var(--border-strong); }
+  .hint { margin-top: 20px; font-size: 12px; color: var(--text-muted); }
+</style>
+<div class="bg" id="bg"></div>
+<main>
+  <img class="cover empty" id="cover" alt="">
+  <h1 id="title">Nothing playing</h1>
+  <div class="artist" id="artist">Start something in Spotify, a browser, any player.</div>
+  <div class="app" id="app"></div>
+  <div class="bar"><i id="fill"></i></div>
+  <div class="times"><span id="pos">0:00</span><span id="dur">0:00</span></div>
+  <div class="controls">
+    <button title="Previous" data-a="previous">⏮</button>
+    <button class="main" title="Play / pause" data-a="toggle" id="toggle">▶</button>
+    <button title="Next" data-a="next">⏭</button>
+  </div>
+  <div class="hint">Windows media session — works with anything that shows in the volume flyout.</div>
+</main>
+<script>
+  const $ = (s) => document.querySelector(s);
+  const fmt = (ms) => { const s = Math.max(0, Math.round((ms ?? 0) / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+  let lastCover = '';
+  const KNOWN = { spotify: 'Spotify', chrome: 'Chrome', msedge: 'Edge', firefox: 'Firefox', vlc: 'VLC', zunemusic: 'Media Player', zunevideo: 'Films & TV', tidal: 'TIDAL', 'apple music': 'Apple Music', applemusic: 'Apple Music' };
+  const appName = (id) => { const raw = (id || '').replace(/^.*!/, '').replace(/\.exe$/i, '').replace(/^.*[\\/]/, ''); const key = raw.toLowerCase(); return Object.entries(KNOWN).find(([k]) => key.includes(k))?.[1] ?? raw; };
+  function render(now) {
+    const cover = $('#cover');
+    if (!now) {
+      cover.removeAttribute('src'); cover.className = 'cover empty'; cover.alt = '♪';
+      $('#bg').classList.remove('on'); $('#title').textContent = 'Nothing playing'; $('#artist').textContent = 'Start something in Spotify, a browser, any player.'; $('#app').textContent = ''; $('#fill').style.width = '0'; $('#pos').textContent = '0:00'; $('#dur').textContent = '0:00'; $('#toggle').textContent = '▶';
+      return;
+    }
+    if (now.thumbnail) { if (now.thumbnail !== lastCover) { cover.src = now.thumbnail; $('#bg').style.backgroundImage = `url("${now.thumbnail}")`; lastCover = now.thumbnail; } cover.className = 'cover' + (now.playing ? '' : ' paused'); $('#bg').classList.add('on'); }
+    else { cover.removeAttribute('src'); cover.className = 'cover empty'; $('#bg').classList.remove('on'); }
+    $('#title').textContent = now.title; $('#title').title = now.title;
+    $('#artist').textContent = now.album ? `${now.artist} · ${now.album}` : now.artist;
+    $('#app').textContent = appName(now.app);
+    const pct = now.duration_ms ? Math.min(100, (100 * (now.position_ms ?? 0)) / now.duration_ms) : 0;
+    $('#fill').style.width = pct + '%'; $('#pos').textContent = fmt(now.position_ms); $('#dur').textContent = fmt(now.duration_ms);
+    $('#toggle').textContent = now.playing ? '⏸' : '▶';
+  }
+  document.querySelector('.controls').onclick = (e) => { const a = e.target.closest('button')?.dataset.a; if (a) zpace.post({ type: 'control', action: a }); };
+  zpace.on('message', (m) => { if (m?.type === 'now') render(m.now); });
+  zpace.post({ type: 'hello' });
+  addEventListener('unload', () => zpace.post({ type: 'bye' }));
+</script>

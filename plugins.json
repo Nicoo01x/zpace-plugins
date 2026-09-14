@@ -1,6 +1,62 @@
 {
-  "updated": "2026-09-14T02:37:17.533Z",
+  "updated": "2026-09-14T03:06:19.183Z",
   "plugins": [
+    {
+      "id": "calendar",
+      "name": "Calendar",
+      "version": "1.0.0",
+      "description": "A month view with your events, reminders in the island ten minutes before, and a note for any event in one click — kept on this machine, no account.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "tags": [
+        "script",
+        "pane",
+        "command"
+      ],
+      "permissions": [
+        "commands",
+        "notifications",
+        "panes",
+        "events",
+        "notes"
+      ],
+      "contributes": {
+        "commands": [
+          {
+            "id": "open",
+            "title": "Calendar: open",
+            "keywords": [
+              "calendar",
+              "calendario",
+              "events",
+              "agenda"
+            ],
+            "action": {
+              "kind": "pane",
+              "pane": "calendar"
+            }
+          }
+        ],
+        "panes": [
+          {
+            "id": "calendar",
+            "title": "Calendar",
+            "entry": "pane.html"
+          }
+        ]
+      },
+      "main": "main.js",
+      "path": "plugins/calendar",
+      "files": [
+        "icon.svg",
+        "main.js",
+        "pane.html",
+        "plugin.json"
+      ]
+    },
     {
       "id": "code-reviewer",
       "name": "Code Reviewer",
@@ -137,6 +193,61 @@
       "updated": "2026-09-13T23:37:17-03:00"
     },
     {
+      "id": "focus-timer",
+      "name": "Focus Timer",
+      "version": "1.0.0",
+      "description": "A Pomodoro timer that lives in the island: the countdown ticks next to the Zpace mark, the island tells you when a block ends, and the pane keeps your sessions for the day.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "tags": [
+        "script",
+        "pane",
+        "command"
+      ],
+      "permissions": [
+        "commands",
+        "notifications",
+        "panes",
+        "events"
+      ],
+      "contributes": {
+        "commands": [
+          {
+            "id": "open",
+            "title": "Focus: open the timer",
+            "keywords": [
+              "pomodoro",
+              "timer",
+              "focus",
+              "temporizador"
+            ],
+            "action": {
+              "kind": "pane",
+              "pane": "timer"
+            }
+          }
+        ],
+        "panes": [
+          {
+            "id": "timer",
+            "title": "Focus",
+            "entry": "pane.html"
+          }
+        ]
+      },
+      "main": "main.js",
+      "path": "plugins/focus-timer",
+      "files": [
+        "icon.svg",
+        "main.js",
+        "pane.html",
+        "plugin.json"
+      ]
+    },
+    {
       "id": "hello-world",
       "name": "Hello World",
       "version": "1.0.0",
@@ -192,6 +303,60 @@
       "updated": "2026-09-13T23:37:17-03:00"
     },
     {
+      "id": "kanban",
+      "name": "Boards",
+      "version": "1.0.0",
+      "description": "A Trello-style board per project — columns, cards, drag and drop — wired to Zpace notes: turn any note into a card, save any card as a note, open it from the card.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "tags": [
+        "pane",
+        "command"
+      ],
+      "permissions": [
+        "panes",
+        "notes",
+        "notifications",
+        "commands",
+        "events"
+      ],
+      "contributes": {
+        "commands": [
+          {
+            "id": "open",
+            "title": "Boards: open the project board",
+            "keywords": [
+              "kanban",
+              "board",
+              "trello",
+              "tablero",
+              "cards"
+            ],
+            "action": {
+              "kind": "pane",
+              "pane": "board"
+            }
+          }
+        ],
+        "panes": [
+          {
+            "id": "board",
+            "title": "Board",
+            "entry": "pane.html"
+          }
+        ]
+      },
+      "path": "plugins/kanban",
+      "files": [
+        "icon.svg",
+        "pane.html",
+        "plugin.json"
+      ]
+    },
+    {
       "id": "monokai-pro",
       "name": "Monokai Pro",
       "version": "1.0.0",
@@ -237,6 +402,63 @@
         "plugin.json"
       ],
       "updated": "2026-09-13T23:37:17-03:00"
+    },
+    {
+      "id": "now-playing",
+      "name": "Now Playing",
+      "version": "1.0.0",
+      "description": "What is playing on your machine — Spotify, YouTube, any player — with the cover, the track and play/pause/next in a pane, and the track in the island while it plays.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "tags": [
+        "script",
+        "pane",
+        "command"
+      ],
+      "permissions": [
+        "media",
+        "commands",
+        "notifications",
+        "panes",
+        "events"
+      ],
+      "contributes": {
+        "commands": [
+          {
+            "id": "open",
+            "title": "Music: open Now Playing",
+            "keywords": [
+              "spotify",
+              "music",
+              "musica",
+              "player",
+              "now playing"
+            ],
+            "action": {
+              "kind": "pane",
+              "pane": "player"
+            }
+          }
+        ],
+        "panes": [
+          {
+            "id": "player",
+            "title": "Now Playing",
+            "entry": "pane.html"
+          }
+        ]
+      },
+      "main": "main.js",
+      "path": "plugins/now-playing",
+      "files": [
+        "icon.svg",
+        "main.js",
+        "pane.html",
+        "plugin.json"
+      ]
     },
     {
       "id": "rose-pine",
@@ -308,6 +530,63 @@
         "plugin.json"
       ],
       "updated": "2026-09-13T23:37:17-03:00"
+    },
+    {
+      "id": "weather",
+      "name": "Weather",
+      "version": "1.0.0",
+      "description": "Now, the next hours and the week for your city, from Open-Meteo (free, no key). The temperature sits in the island; the pane has the details. Location by IP, or type a city.",
+      "author": {
+        "name": "Nicolás Cabanillas",
+        "github": "Nicoo01x"
+      },
+      "icon": "icon.svg",
+      "homepage": "https://open-meteo.com",
+      "tags": [
+        "script",
+        "pane",
+        "command"
+      ],
+      "permissions": [
+        "network",
+        "commands",
+        "notifications",
+        "panes",
+        "events"
+      ],
+      "contributes": {
+        "commands": [
+          {
+            "id": "open",
+            "title": "Weather: open",
+            "keywords": [
+              "weather",
+              "clima",
+              "tiempo",
+              "forecast"
+            ],
+            "action": {
+              "kind": "pane",
+              "pane": "weather"
+            }
+          }
+        ],
+        "panes": [
+          {
+            "id": "weather",
+            "title": "Weather",
+            "entry": "pane.html"
+          }
+        ]
+      },
+      "main": "main.js",
+      "path": "plugins/weather",
+      "files": [
+        "icon.svg",
+        "main.js",
+        "pane.html",
+        "plugin.json"
+      ]
     }
   ]
 }

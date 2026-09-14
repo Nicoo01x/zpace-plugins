@@ -4,6 +4,21 @@ The community registry for [Zpace](https://github.com/Nicoo01x/Zpace) — the de
 
 A plugin is a folder. No build step, no upload: you open a pull request, CI validates it, and once it is merged the app sees it.
 
+## What is in the library
+
+| Plugin | What it does |
+| --- | --- |
+| **Boards** (`kanban`) | A Trello-style board per project, wired to Zpace notes. |
+| **Focus Timer** | Pomodoro in the island — the countdown next to the Zpace mark. |
+| **Now Playing** | Spotify / any player: cover, track, play/pause/next, the track in the island. |
+| **Calendar** | Month view, reminders ten minutes before, a note per event. |
+| **Weather** | Now, the next hours, the week — Open-Meteo, no key. Temperature in the island. |
+| **Code Reviewer** | A ready-made review agent for your rooms. |
+| **Conventional Commits** | A Claude Code skill + a palette command for commit messages. |
+| **Daily Standup** | Two prompts: what you did, what to do. |
+| **Rosé Pine**, **Monokai Pro** | Theme packs. |
+| **Hello World** | The template. |
+
 ## Publish a plugin
 
 1. Fork this repo and copy `plugins/hello-world` to `plugins/<your-id>` (lowercase, dashes).
@@ -45,7 +60,7 @@ To update, bump `version` and open another pull request; the app offers the upda
 }
 ```
 
-Permissions: `commands` `panes` `events` `agents` `shell` `files` `network` `notifications` `clipboard`. A script that calls something it did not declare gets an error, not the feature.
+Permissions: `commands` `panes` `events` `agents` `shell` `files` `network` `notifications` `clipboard` `notes` `media`. A script that calls something it did not declare gets an error, not the feature.
 
 ### The script API
 
@@ -61,9 +76,12 @@ export function activate(zpace) {
 | --- | --- | --- |
 | `zpace.plugin` | — | `{ id, version, dir }` |
 | `zpace.commands.register({ id, title, keywords?, run })` | `commands` | Adds a palette command; returns a disposer. |
-| `zpace.notify({ title, summary?, variant?, action? })` | `notifications` | A notification in the island. |
-| `zpace.panes.open(paneId)` / `zpace.panes.openHtml(title, html)` | `panes` | Opens a pane from `contributes.panes`, or ad-hoc HTML. |
-| `zpace.on(event, cb)` | `events` | `session:started`, `session:completed` (`{ sessionId, title, projectId, text }`), `notification`, `project:changed`. Returns a disposer. |
+| `zpace.notify({ title, summary?, variant?, sticky?, action? })` | `notifications` | A notification in the island; returns its id. `zpace.notifications.update(id, patch)` / `.remove(id)`. |
+| `zpace.island.set({ icon?, text, title?, color?, onClick? })` / `.set(null)` | `notifications` | A live readout in the compact island (a countdown, the track playing). |
+| `zpace.panes.open(paneId)` / `zpace.panes.openHtml(title, html)` / `zpace.panes.postMessage(msg)` | `panes` | Opens a pane from `contributes.panes` or ad-hoc HTML; posts to the open ones. |
+| `zpace.notes.list({ project? })` / `.read(id)` / `.create({ title, body?, tags? })` / `.update(id, patch)` / `.open(id)` | `notes` | Zpace notes. |
+| `zpace.media.now()` / `zpace.media.control('play' | 'pause' | 'toggle' | 'next' | 'previous')` | `media` | The system media session (Spotify, browsers, any player): title, artist, album, cover, position. |
+| `zpace.on(event, cb)` | `events` | `session:started`, `session:completed` (`{ sessionId, title, projectId, text }`), `notification`, `project:changed`, `pane:message` (`{ pluginId, message }` from your panes). Returns a disposer. |
 | `zpace.agents.ask(text, { project?, session?: 'active' \| 'new', title? })` | `agents` | Sends a prompt to Claude Code; returns the session id. `zpace.agents.list()` lists your Zpace agents. |
 | `zpace.projects.current()` / `.list()` | — | `{ id, name, path }` |
 | `zpace.shell.run(command, { cwd? })` | `shell` | Runs in PowerShell / sh; resolves `{ code, output }`. |
@@ -76,12 +94,18 @@ export function activate(zpace) {
 
 ### Panes
 
-A pane is an HTML file. The app wraps it with `--background`, `--surface`, `--text-primary`, `--text-secondary`, `--accent` and `--border` as CSS variables, so a page can match the theme without knowing it. From the page:
+A pane is an HTML file in a sandboxed iframe. The app injects `window.zpace` — the same API as the script, over postMessage, every call a promise — and its theme as CSS variables (`--background`, `--surface`, `--surface-inset`, `--text-primary`, `--text-secondary`, `--text-muted`, `--accent`, `--accent-soft`, `--border`, `--border-strong`, `--success`, `--warning`, `--danger`).
 
 ```js
-parent.postMessage({ zpace: 'notify', title: 'Done', summary: '…' }, '*');
-parent.postMessage({ zpace: 'command', id: 'hi' }, '*'); // runs one of your commands
+const notes = await zpace.notes.list({ project: 'active' });
+zpace.notify({ title: 'Done' });
+zpace.on('session:completed', (e) => …);   // events, same names as the script
+zpace.on('message', (m) => …);             // what your script sends with zpace.panes.postMessage
+zpace.post({ type: 'hello' });             // to your script: zpace.on('pane:message', ({ message }) => …)
+zpace.on('theme', ({ dark }) => …);        // when the app's theme changes
 ```
+
+A pane and a script share state through `zpace.storage` — the timer keeps counting with the pane closed because the script owns the clock.
 
 ## Rules
 

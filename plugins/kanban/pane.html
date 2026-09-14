@@ -1,0 +1,139 @@
+<style>
+  * { box-sizing: border-box; }
+  body { display: flex; flex-direction: column; height: 100%; overflow: hidden; font-size: 13px; }
+  header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); flex: 0 0 auto; }
+  header h1 { font-size: 13.5px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  header .project { color: var(--text-secondary); font-weight: 400; }
+  header .spacer { flex: 1; }
+  button { font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); cursor: pointer; }
+  button:hover { border-color: var(--border-strong); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.ghost { background: transparent; border-color: transparent; color: var(--text-secondary); }
+  button.ghost:hover { background: var(--surface-inset); color: var(--text-primary); }
+  .board { display: flex; gap: 12px; padding: 14px; overflow-x: auto; overflow-y: hidden; flex: 1; align-items: flex-start; }
+  .column { width: 260px; flex: 0 0 260px; max-height: 100%; display: flex; flex-direction: column; background: var(--surface-inset); border-radius: 12px; padding: 8px; }
+  .column.over { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .column h2 { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 0; padding: 4px 6px 8px; display: flex; align-items: center; gap: 6px; }
+  .column h2 .count { color: var(--text-muted); font-weight: 500; }
+  .column h2 .x { margin-left: auto; opacity: 0; }
+  .column:hover h2 .x { opacity: 1; }
+  .cards { display: flex; flex-direction: column; gap: 6px; overflow-y: auto; min-height: 24px; padding-bottom: 2px; }
+  .card { background: var(--background); border: 1px solid var(--border); border-radius: 9px; padding: 8px 10px; cursor: grab; position: relative; }
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.4; }
+  .card .title { font-weight: 500; line-height: 1.35; white-space: pre-wrap; word-break: break-word; }
+  .card .desc { color: var(--text-secondary); font-size: 12px; margin-top: 3px; white-space: pre-wrap; line-height: 1.4; max-height: 60px; overflow: hidden; }
+  .card .meta { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+  .card .tag { font-size: 10.5px; padding: 1px 7px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  .card .note { font-size: 10.5px; color: var(--text-muted); display: inline-flex; align-items: center; gap: 4px; }
+  .card .tools { position: absolute; top: 6px; right: 6px; display: none; gap: 2px; }
+  .card:hover .tools { display: flex; }
+  .card .tools button { padding: 2px 6px; font-size: 11px; }
+  .add { margin-top: 6px; }
+  .add textarea { width: 100%; resize: none; font: inherit; padding: 8px 10px; border-radius: 9px; border: 1px solid var(--accent); background: var(--background); color: var(--text-primary); outline: none; }
+  .empty { color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center; }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: none; align-items: center; justify-content: center; }
+  .modal.open { display: flex; }
+  .sheet { width: 420px; max-height: 70vh; overflow: auto; background: var(--background); border-radius: 12px; padding: 14px; border: 1px solid var(--border); }
+  .sheet h3 { margin: 0 0 8px; font-size: 13px; }
+  .pick { display: flex; flex-direction: column; gap: 4px; }
+  .pick label { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 7px; cursor: pointer; }
+  .pick label:hover { background: var(--surface-inset); }
+  .pick .k { font-size: 10.5px; color: var(--text-muted); margin-left: auto; }
+  .colors { display: flex; gap: 6px; margin: 8px 0; }
+  .colors button { width: 22px; height: 22px; padding: 0; border-radius: 50%; }
+</style>
+<header>
+  <h1>Board <span class="project" id="project"></span></h1>
+  <span class="spacer"></span>
+  <button class="ghost" id="fromNotes">From notes…</button>
+  <button class="ghost" id="addColumn">+ Column</button>
+</header>
+<div class="board" id="board"></div>
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<script>
+  const DEFAULT = () => ({ columns: [{ id: 'todo', name: 'To do' }, { id: 'doing', name: 'Doing' }, { id: 'done', name: 'Done' }], cards: [] });
+  const TAGS = ['', 'bug', 'idea', 'urgent', 'later'];
+  let project = null, doc = DEFAULT(), key = 'board:none', dragging = null;
+  const $ = (s) => document.querySelector(s);
+  const uid = () => Math.random().toString(36).slice(2, 9);
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  async function load() {
+    project = await zpace.projects.current();
+    key = `board:${project?.id ?? 'none'}`;
+    doc = (await zpace.storage.get(key)) ?? DEFAULT();
+    $('#project').textContent = project ? `· ${project.name}` : '';
+    render();
+  }
+  const save = () => zpace.storage.set(key, doc);
+
+  function render() {
+    const board = $('#board');
+    board.innerHTML = '';
+    for (const col of doc.columns) {
+      const cards = doc.cards.filter((c) => c.column === col.id);
+      const el = document.createElement('div');
+      el.className = 'column';
+      el.dataset.id = col.id;
+      el.innerHTML = `<h2><span>${esc(col.name)}</span><span class="count">${cards.length}</span><button class="ghost x" title="Remove column">×</button></h2><div class="cards"></div><div class="add"><button class="ghost" style="width:100%;text-align:left">+ Card</button></div>`;
+      el.querySelector('.x').onclick = () => { if (cards.length && !confirm(`Remove "${col.name}" and its ${cards.length} cards?`)) return; doc.columns = doc.columns.filter((c) => c.id !== col.id); doc.cards = doc.cards.filter((c) => c.column !== col.id); save(); render(); };
+      const list = el.querySelector('.cards');
+      if (!cards.length) list.innerHTML = '<div class="empty">Drop cards here</div>';
+      for (const card of cards) list.appendChild(cardEl(card));
+      el.querySelector('.add button').onclick = () => addCard(el, col.id);
+      el.addEventListener('dragover', (e) => { e.preventDefault(); el.classList.add('over'); });
+      el.addEventListener('dragleave', () => el.classList.remove('over'));
+      el.addEventListener('drop', (e) => { e.preventDefault(); el.classList.remove('over'); if (!dragging) return; const c = doc.cards.find((x) => x.id === dragging); if (c) { c.column = col.id; doc.cards = [...doc.cards.filter((x) => x.id !== c.id), c]; save(); render(); } });
+      board.appendChild(el);
+    }
+  }
+
+  function cardEl(card) {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.draggable = true;
+    el.innerHTML = `<div class="title">${esc(card.title)}</div>${card.desc ? `<div class="desc">${esc(card.desc)}</div>` : ''}<div class="meta">${card.tag ? `<span class="tag">${esc(card.tag)}</span>` : ''}${card.noteId ? '<span class="note">📝 note</span>' : ''}</div><div class="tools"><button title="Edit">✎</button><button title="Tag">#</button><button title="${card.noteId ? 'Open the note' : 'Save as a note'}">${card.noteId ? '↗' : '📝'}</button><button title="Delete">×</button></div>`;
+    const [edit, tag, note, del] = el.querySelectorAll('.tools button');
+    el.addEventListener('dragstart', () => { dragging = card.id; el.classList.add('dragging'); });
+    el.addEventListener('dragend', () => { dragging = null; el.classList.remove('dragging'); });
+    edit.onclick = () => { const t = prompt('Card', card.title); if (t === null) return; card.title = t.trim() || card.title; const d = prompt('Details (optional)', card.desc ?? ''); if (d !== null) card.desc = d.trim(); save(); render(); };
+    tag.onclick = () => { card.tag = TAGS[(TAGS.indexOf(card.tag ?? '') + 1) % TAGS.length]; save(); render(); };
+    del.onclick = () => { doc.cards = doc.cards.filter((c) => c.id !== card.id); save(); render(); };
+    note.onclick = async () => {
+      if (card.noteId) { await zpace.notes.open(card.noteId); return; }
+      const id = await zpace.notes.create({ title: card.title, body: card.desc ? `# ${card.title}\n\n${card.desc}` : `# ${card.title}\n`, tags: ['board'] });
+      card.noteId = id; save(); render();
+      zpace.notify({ title: 'Saved as a note', summary: card.title, variant: 'success' });
+    };
+    el.ondblclick = () => edit.onclick();
+    return el;
+  }
+
+  function addCard(colEl, column) {
+    const add = colEl.querySelector('.add');
+    add.innerHTML = '<textarea rows="2" placeholder="What needs doing? Enter to add"></textarea>';
+    const ta = add.querySelector('textarea');
+    ta.focus();
+    const commit = () => { const title = ta.value.trim(); if (title) { doc.cards.push({ id: uid(), column, title, createdAt: Date.now() }); save(); } render(); };
+    ta.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit(); } if (e.key === 'Escape') render(); };
+    ta.onblur = commit;
+  }
+
+  $('#addColumn').onclick = () => { const name = prompt('Column name'); if (!name?.trim()) return; doc.columns.push({ id: uid(), name: name.trim() }); save(); render(); };
+  $('#fromNotes').onclick = async () => {
+    const notes = (await zpace.notes.list({ project: 'active' })).filter((n) => n.kind !== 'board');
+    const linked = new Set(doc.cards.map((c) => c.noteId).filter(Boolean));
+    const sheet = $('#sheet');
+    sheet.innerHTML = `<h3>Add notes as cards</h3>${notes.length ? `<div class="pick">${notes.map((n) => `<label><input type="checkbox" value="${n.id}" ${linked.has(n.id) ? 'checked disabled' : ''}> <span>${esc(n.title || 'Untitled')}</span><span class="k">${n.tags.join(' ')}</span></label>`).join('')}</div>` : '<div class="empty">No notes in this project yet.</div>'}<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="ghost" id="cancel">Cancel</button><button class="primary" id="ok">Add</button></div>`;
+    $('#modal').classList.add('open');
+    sheet.querySelector('#cancel').onclick = () => $('#modal').classList.remove('open');
+    sheet.querySelector('#ok').onclick = () => {
+      for (const cb of sheet.querySelectorAll('input:checked:not(:disabled)')) { const n = notes.find((x) => x.id === cb.value); doc.cards.push({ id: uid(), column: doc.columns[0].id, title: n.title || 'Untitled', noteId: n.id, createdAt: Date.now() }); }
+      save(); render(); $('#modal').classList.remove('open');
+    };
+  };
+  $('#modal').onclick = (e) => { if (e.target === e.currentTarget) e.currentTarget.classList.remove('open'); };
+  zpace.on('project:changed', () => load());
+  load();
+</script>

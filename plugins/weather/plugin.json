@@ -1,0 +1,16 @@
+{
+  "id": "weather",
+  "name": "Weather",
+  "version": "1.0.0",
+  "description": "Now, the next hours and the week for your city, from Open-Meteo (free, no key). The temperature sits in the island; the pane has the details. Location by IP, or type a city.",
+  "author": { "name": "Nicolás Cabanillas", "github": "Nicoo01x" },
+  "icon": "icon.svg",
+  "homepage": "https://open-meteo.com",
+  "tags": ["script", "pane", "command"],
+  "permissions": ["network", "commands", "notifications", "panes", "events"],
+  "contributes": {
+    "commands": [{ "id": "open", "title": "Weather: open", "keywords": ["weather", "clima", "tiempo", "forecast"], "action": { "kind": "pane", "pane": "weather" } }],
+    "panes": [{ "id": "weather", "title": "Weather", "entry": "pane.html" }]
+  },
+  "main": "main.js"
+}

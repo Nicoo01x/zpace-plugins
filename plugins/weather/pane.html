@@ -1,0 +1,64 @@
+<style>
+  * { box-sizing: border-box; }
+  body { height: 100%; overflow-y: auto; font-size: 13px; }
+  main { max-width: 640px; margin: 0 auto; padding: 22px 24px 32px; }
+  .top { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .top form { display: flex; gap: 6px; flex: 1; }
+  .top input { flex: 1; font: inherit; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); outline: none; }
+  .top input:focus { border-color: var(--accent); }
+  button { font: inherit; font-size: 12px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); cursor: pointer; }
+  button:hover { border-color: var(--border-strong); }
+  .now { display: flex; align-items: center; gap: 22px; padding: 22px; border-radius: 16px; background: var(--surface-inset); }
+  .now .icon { font-size: 64px; line-height: 1; }
+  .now .temp { font-size: 54px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .now .label { font-size: 15px; margin-top: 6px; }
+  .now .place { color: var(--text-secondary); margin-top: 2px; }
+  .now .stats { margin-left: auto; text-align: right; color: var(--text-secondary); font-size: 12.5px; line-height: 1.7; }
+  h2 { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin: 22px 0 8px; }
+  .hours { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .hour { flex: 0 0 64px; text-align: center; padding: 10px 4px; border-radius: 10px; background: var(--surface-inset); }
+  .hour .t { font-size: 11px; color: var(--text-muted); }
+  .hour .i { font-size: 22px; margin: 4px 0; }
+  .hour .v { font-weight: 600; font-variant-numeric: tabular-nums; }
+  .hour .r { font-size: 10.5px; color: var(--accent); }
+  .days { display: flex; flex-direction: column; gap: 4px; }
+  .day { display: grid; grid-template-columns: 90px 32px 1fr 60px 90px; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: var(--surface-inset); }
+  .day .n { font-weight: 500; }
+  .day .l { color: var(--text-secondary); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .day .r { color: var(--accent); font-size: 11.5px; text-align: right; }
+  .day .mm { text-align: right; font-variant-numeric: tabular-nums; }
+  .day .mm span { color: var(--text-muted); }
+  .err { margin-top: 12px; padding: 8px 12px; border-radius: 8px; background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); font-size: 12px; }
+  .foot { margin-top: 18px; font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; }
+  .empty { padding: 40px; text-align: center; color: var(--text-muted); }
+</style>
+<main>
+  <div class="top">
+    <form id="search"><input id="q" placeholder="City… (Enter)" autocomplete="off"><button type="submit">Go</button></form>
+    <button id="locate" title="Use my location">📍</button>
+    <button id="refresh" title="Refresh">↻</button>
+  </div>
+  <div id="content"><div class="empty">Loading the forecast…</div></div>
+  <div id="err"></div>
+  <div class="foot" id="foot"></div>
+</main>
+<script>
+  const $ = (s) => document.querySelector(s);
+  const lang = navigator.language;
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  function render(d) {
+    if (!d) return;
+    const c = d.current;
+    $('#content').innerHTML = `
+      <div class="now"><div class="icon">${c.icon}</div><div><div class="temp">${Math.round(c.temp)}°</div><div class="label">${esc(c.label)}</div><div class="place">${esc(d.place.name)}</div></div>
+        <div class="stats">Feels ${Math.round(c.feels)}°<br>Humidity ${c.humidity}%<br>Wind ${Math.round(c.wind)} km/h</div></div>
+      <h2>Next hours</h2><div class="hours">${d.hours.map((h) => `<div class="hour"><div class="t">${new Date(h.time).toLocaleTimeString(lang, { hour: '2-digit' })}</div><div class="i">${h.icon}</div><div class="v">${Math.round(h.temp)}°</div><div class="r">${h.rain ? h.rain + '%' : '&nbsp;'}</div></div>`).join('')}</div>
+      <h2>This week</h2><div class="days">${d.days.map((x, i) => `<div class="day"><span class="n">${i === 0 ? 'Today' : new Date(x.date + 'T12:00:00').toLocaleDateString(lang, { weekday: 'long' })}</span><span>${x.icon}</span><span class="l">${esc(x.label)}</span><span class="r">${x.rain ? x.rain + '% ☔' : ''}</span><span class="mm">${Math.round(x.max)}° <span>${Math.round(x.min)}°</span></span></div>`).join('')}</div>`;
+    $('#foot').innerHTML = `<span>Open-Meteo</span><span>Updated ${new Date(d.fetchedAt).toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' })}</span>`;
+  }
+  zpace.on('message', (m) => { if (m?.type !== 'weather') return; render(m.data); $('#err').innerHTML = m.error ? `<div class="err">${esc(m.error)}</div>` : ''; });
+  $('#search').onsubmit = (e) => { e.preventDefault(); const q = $('#q').value.trim(); if (q) zpace.post({ type: 'search', q }); };
+  $('#locate').onclick = () => zpace.post({ type: 'locate' });
+  $('#refresh').onclick = () => zpace.post({ type: 'refresh' });
+  zpace.post({ type: 'hello' });
+</script>
