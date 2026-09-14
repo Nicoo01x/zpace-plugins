@@ -1,5 +1,5 @@
 # Pull requests: validate every manifest and the index. Pushes to main: rebuild plugins.json and commit it
-# (the Actions app bypasses the branch rules for exactly that).
+# (pushed with a deploy key, the one actor the branch rules let through).
 name: plugins
 permissions:
   contents: read
@@ -22,16 +22,16 @@ jobs:
     if: github.event_name == 'push'
     needs: validate
     runs-on: ubuntu-latest
-    permissions: { contents: write }
     steps:
+      # the deploy key is the one actor allowed past the branch rules; the commit carries the owner's identity
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
+        with: { fetch-depth: 0, ssh-key: ${{ secrets.INDEX_DEPLOY_KEY }} }
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: node scripts/build-index.mjs
       - name: commit plugins.json
         run: |
-          git config user.name "zpace-bot"
-          git config user.email "bot@users.noreply.github.com"
+          git config user.name "Nicoo01x"
+          git config user.email "76893296+Nicoo01x@users.noreply.github.com"
           git add plugins.json
           git diff --cached --quiet || (git commit -m "index: rebuild plugins.json" && git push)
