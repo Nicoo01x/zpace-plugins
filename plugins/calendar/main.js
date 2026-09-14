@@ -1,6 +1,8 @@
 // Reminders: once a minute, any event starting within ten minutes that has not been announced yet goes to the island.
 // Events live in storage as { id, date: 'YYYY-MM-DD', time: 'HH:MM' | '', title, noteId? }.
 
+const ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M3 10h18"/></svg>';
+
 export function activate(zpace) {
   const disposers = [];
   const announced = new Set(zpace.storage.get('announced', []));
@@ -33,7 +35,7 @@ export function activate(zpace) {
       .sort((a, b) => a.at - b.at)[0];
     if (!up) return zpace.island.set(null);
     const sameDay = new Date(up.at).toDateString() === new Date().toDateString();
-    zpace.island.set({ icon: '📅', text: `${sameDay ? up.time || '' : new Date(up.at).toLocaleDateString(undefined, { weekday: 'short' })} ${up.title}`.trim(), title: 'Next event — click to open the calendar', onClick: () => zpace.panes.open('calendar') });
+    zpace.island.set({ icon: ICON, text: `${sameDay ? up.time || '' : new Date(up.at).toLocaleDateString(undefined, { weekday: 'short' })} ${up.title}`.trim(), title: 'Next event — click to open the calendar', onClick: () => zpace.panes.open('calendar') });
   };
   const timer = setInterval(() => {
     check();

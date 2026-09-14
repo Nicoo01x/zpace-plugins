@@ -78,7 +78,7 @@ export function activate(zpace) {
 | `zpace.plugin` | — | `{ id, version, dir }` |
 | `zpace.commands.register({ id, title, keywords?, run })` | `commands` | Adds a palette command; returns a disposer. |
 | `zpace.notify({ title, summary?, variant?, sticky?, action? })` | `notifications` | A notification in the island; returns its id. `zpace.notifications.update(id, patch)` / `.remove(id)`. |
-| `zpace.island.set({ icon?, text, title?, color?, onClick? })` / `.set(null)` | `notifications` | A live readout in the compact island (a countdown, the track playing). |
+| `zpace.island.set({ icon?, text, title?, color?, onClick? })` / `.set(null)` | `notifications` | A live readout in the compact island (a countdown, the track playing). `icon` is a single glyph or an inline `<svg …>` string, drawn at 12 px in the chip's colour — prefer a real icon (`stroke="currentColor"`) over an emoji. |
 | `zpace.island.show({ title, lines?, image?, buttons?, foldMs? })` → id / `.update(id, card)` / `.hide(id)` | `notifications` | A card that unfolds in the island: a round image at the left (a cover, a data URL or https), the title, more lines, a row of buttons (`{ label, run, primary? }`). It folds after `foldMs` (8 s) — the natural thing to show when your readout is clicked. |
 | `zpace.panes.open(paneId)` / `zpace.panes.openHtml(title, html)` / `zpace.panes.postMessage(msg)` | `panes` | Opens a pane from `contributes.panes` or ad-hoc HTML; posts to the open ones. |
 | `zpace.notes.list({ project? })` / `.read(id)` / `.create({ title, body?, tags? })` / `.update(id, patch)` / `.open(id)` | `notes` | Zpace notes. |

@@ -1,8 +1,8 @@
 {
   "id": "focus-timer",
   "name": "Focus Timer",
-  "version": "1.0.1",
-  "description": "A Pomodoro timer that lives in the island: the countdown ticks next to the Zpace mark, the island tells you when a block ends, and the pane keeps your sessions for the day.",
+  "version": "1.1.0",
+  "description": "A focus timer that lives in the island: the countdown next to the Zpace mark, a click for pause / resume / reset, any length you want, and the pane keeps your blocks for the day.",
   "author": {
     "name": "Nicolás Cabanillas",
     "github": "Nicoo01x"

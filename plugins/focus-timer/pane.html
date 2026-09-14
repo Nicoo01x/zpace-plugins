@@ -21,6 +21,11 @@
   .presets { margin-top: 18px; display: flex; justify-content: center; gap: 6px; }
   .presets button { font: inherit; font-size: 11.5px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); cursor: pointer; }
   .presets button:hover { color: var(--text-primary); border-color: var(--border-strong); }
+  .custom { display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; }
+  .custom input { font: inherit; font-size: 11.5px; width: 56px; padding: 3px 6px; border-radius: 999px; border: 1px solid var(--border); background: var(--background); color: var(--text-primary); outline: none; text-align: center; -moz-appearance: textfield; }
+  .custom input::-webkit-outer-spin-button, .custom input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .custom input:focus { border-color: var(--accent); }
+  .custom button { font: inherit; font-size: 11.5px; padding: 4px 10px; border-radius: 999px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
   .today { margin-top: 26px; font-size: 12.5px; color: var(--text-secondary); }
   .today b { color: var(--text-primary); }
   .dots { display: inline-flex; gap: 4px; margin-left: 8px; vertical-align: middle; }
@@ -33,7 +38,7 @@
     <div class="time"><b id="time">25:00</b><span id="label">ready</span></div>
   </div>
   <div class="row"><button class="big primary" id="startPause">Start</button><button class="big" id="reset">Reset</button></div>
-  <div class="presets" id="presets"><button data-m="15">15</button><button data-m="25">25</button><button data-m="45">45</button><button data-m="50">50</button><button data-m="90">90</button></div>
+  <div class="presets" id="presets"><button data-m="15">15</button><button data-m="25">25</button><button data-m="45">45</button><button data-m="50">50</button><button data-m="90">90</button><form class="custom" id="custom"><input id="minutes" type="number" min="1" max="600" step="1" placeholder="min" aria-label="Minutes"><button type="submit">Go</button></form></div>
   <div class="today" id="today"></div>
 </main>
 <script>
@@ -58,7 +63,8 @@
   $('#reset').onclick = () => zpace.post({ type: 'reset' });
   $('#mFocus').onclick = () => zpace.post({ type: 'mode', mode: 'focus' });
   $('#mBreak').onclick = () => zpace.post({ type: 'mode', mode: 'break' });
-  $('#presets').onclick = (e) => { const m = e.target.dataset.m; if (m) zpace.post({ type: 'start', mode: 'focus', minutes: Number(m) }); };
+  $('#presets').onclick = (e) => { const m = e.target.dataset?.m; if (m) zpace.post({ type: 'start', mode: st?.mode ?? 'focus', minutes: Number(m) }); };
+  $('#custom').onsubmit = (e) => { e.preventDefault(); const m = Number($('#minutes').value); if (m >= 1) { zpace.post({ type: 'start', mode: st?.mode ?? 'focus', minutes: Math.min(600, Math.round(m)) }); $('#minutes').value = ''; } };
   zpace.on('message', render);
   zpace.post({ type: 'hello' });
 </script>
