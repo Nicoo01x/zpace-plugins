@@ -25,7 +25,9 @@ jobs:
     steps:
       # the deploy key is the one actor allowed past the branch rules; the commit carries the owner's identity
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0, ssh-key: ${{ secrets.INDEX_DEPLOY_KEY }} }
+        with:
+          fetch-depth: 0
+          ssh-key: ${{ secrets.INDEX_DEPLOY_KEY }}
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: node scripts/build-index.mjs
