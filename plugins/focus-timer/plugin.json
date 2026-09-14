@@ -1,17 +1,48 @@
 {
   "id": "focus-timer",
   "name": "Focus Timer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Pomodoro timer that lives in the island: the countdown ticks next to the Zpace mark, the island tells you when a block ends, and the pane keeps your sessions for the day.",
-  "author": { "name": "Nicolás Cabanillas", "github": "Nicoo01x" },
+  "author": {
+    "name": "Nicolás Cabanillas",
+    "github": "Nicoo01x"
+  },
   "icon": "icon.svg",
-  "tags": ["script", "pane", "command"],
-  "permissions": ["commands", "notifications", "panes", "events"],
+  "tags": [
+    "script",
+    "pane",
+    "command"
+  ],
+  "permissions": [
+    "commands",
+    "notifications",
+    "panes",
+    "events"
+  ],
   "contributes": {
     "commands": [
-      { "id": "open", "title": "Focus: open the timer", "keywords": ["pomodoro", "timer", "focus", "temporizador"], "action": { "kind": "pane", "pane": "timer" } }
+      {
+        "id": "open",
+        "title": "Focus: open the timer",
+        "keywords": [
+          "pomodoro",
+          "timer",
+          "focus",
+          "temporizador"
+        ],
+        "action": {
+          "kind": "pane",
+          "pane": "timer"
+        }
+      }
     ],
-    "panes": [{ "id": "timer", "title": "Focus", "entry": "pane.html" }]
+    "panes": [
+      {
+        "id": "timer",
+        "title": "Focus",
+        "entry": "pane.html"
+      }
+    ]
   },
   "main": "main.js"
 }

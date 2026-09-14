@@ -1,10 +1,10 @@
 {
-  "updated": "2026-09-14T03:25:39.079Z",
+  "updated": "2026-09-14T20:17:46.127Z",
   "plugins": [
     {
       "id": "calendar",
       "name": "Calendar",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "A month view with your events, reminders in the island ten minutes before, and a note for any event in one click — kept on this machine, no account.",
       "author": {
         "name": "Nicolás Cabanillas",
@@ -196,7 +196,7 @@
     {
       "id": "focus-timer",
       "name": "Focus Timer",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "A Pomodoro timer that lives in the island: the countdown ticks next to the Zpace mark, the island tells you when a block ends, and the pane keeps your sessions for the day.",
       "author": {
         "name": "Nicolás Cabanillas",
@@ -409,7 +409,7 @@
     {
       "id": "now-playing",
       "name": "Now Playing",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "description": "What is playing on your machine — Spotify, YouTube, any player — with the cover, the track and play/pause/next in a pane, and the track in the island while it plays.",
       "author": {
         "name": "Nicolás Cabanillas",

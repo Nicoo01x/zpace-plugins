@@ -58,7 +58,7 @@
   let selected = iso(new Date());
   const lang = navigator.language;
   const monthName = (d) => d.toLocaleDateString(lang, { month: 'long', year: 'numeric' });
-  const save = () => zpace.storage.set('events', events);
+  const save = () => { zpace.storage.set('events', events); zpace.post({ type: 'changed' }); };
 
   async function load() { events = (await zpace.storage.get('events')) ?? []; render(); }
 

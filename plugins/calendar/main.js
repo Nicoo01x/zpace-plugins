@@ -23,8 +23,25 @@ export function activate(zpace) {
       });
     }
   };
-  const timer = setInterval(check, 60_000);
+  // the next event within the day, in the island
+  const chip = () => {
+    const now = Date.now();
+    const up = zpace.storage
+      .get('events', [])
+      .map((e) => ({ ...e, at: new Date(`${e.date}T${e.time || '23:59'}:00`).getTime() }))
+      .filter((e) => e.at >= now - 5 * 60_000 && e.at <= now + 24 * 3_600_000)
+      .sort((a, b) => a.at - b.at)[0];
+    if (!up) return zpace.island.set(null);
+    const sameDay = new Date(up.at).toDateString() === new Date().toDateString();
+    zpace.island.set({ icon: '📅', text: `${sameDay ? up.time || '' : new Date(up.at).toLocaleDateString(undefined, { weekday: 'short' })} ${up.title}`.trim(), title: 'Next event — click to open the calendar', onClick: () => zpace.panes.open('calendar') });
+  };
+  const timer = setInterval(() => {
+    check();
+    chip();
+  }, 60_000);
   check();
+  chip();
+  disposers.push(zpace.on('pane:message', ({ message: m }) => { if (m?.type === 'changed') chip(); }));
   disposers.push(
     zpace.commands.register({
       id: 'next',
@@ -43,6 +60,7 @@ export function activate(zpace) {
   );
   return () => {
     clearInterval(timer);
+    zpace.island.set(null);
     disposers.forEach((d) => d());
   };
 }

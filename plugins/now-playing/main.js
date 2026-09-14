@@ -8,9 +8,11 @@ export function activate(zpace) {
   let timer = 0;
 
   const same = (a, b) => a?.title === b?.title && a?.artist === b?.artist && a?.playing === b?.playing;
+  // the track stays up while paused (with a pause mark); only silence — no session at all — clears it
   const chip = (now) => {
-    if (!now || !now.playing) return zpace.island.set(null);
-    zpace.island.set({ icon: '♪', text: now.artist ? `${now.title} — ${now.artist}` : now.title, title: 'Now playing — click to open', onClick: () => zpace.panes.open('player') });
+    if (!now) return zpace.island.set(null);
+    const text = now.artist ? `${now.title} — ${now.artist}` : now.title;
+    zpace.island.set({ icon: now.playing ? '♪' : '⏸', text, title: now.playing ? 'Now playing — click to open' : 'Paused — click to open', color: now.playing ? undefined : 'rgba(255,255,255,0.55)', onClick: () => zpace.panes.open('player') });
   };
   const poll = async () => {
     let now = null;

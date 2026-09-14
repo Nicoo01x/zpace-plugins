@@ -13,9 +13,16 @@ export function activate(zpace) {
   const remaining = () => (state.endsAt ? Math.max(0, state.endsAt - Date.now()) : state.paused ?? state.minutes * 60_000);
   const fmt = (ms) => `${Math.floor(ms / 60_000)}:${String(Math.floor((ms % 60_000) / 1000)).padStart(2, '0')}`;
   const broadcast = () => zpace.panes.postMessage({ ...state, remaining: remaining(), running: !!state.endsAt });
+  // always in the island: idle shows the block length, running counts down, paused shows a pause mark
   const chip = () => {
-    if (!state.endsAt && state.paused === null) return zpace.island.set(null);
-    zpace.island.set({ icon: state.mode === 'focus' ? '🍅' : '☕', text: state.endsAt ? fmt(remaining()) : `${fmt(remaining())} ⏸`, title: state.mode === 'focus' ? 'Focus — click to open' : 'Break — click to open', onClick: () => zpace.panes.open('timer') });
+    const idle = !state.endsAt && state.paused === null;
+    zpace.island.set({
+      icon: state.mode === 'focus' ? '🍅' : '☕',
+      text: state.endsAt ? fmt(remaining()) : idle ? fmt(state.minutes * 60_000) : `${fmt(remaining())} ⏸`,
+      title: idle ? 'Focus timer — click to start' : state.mode === 'focus' ? 'Focus — click to open' : 'Break — click to open',
+      color: idle ? 'rgba(255,255,255,0.55)' : undefined,
+      onClick: () => zpace.panes.open('timer'),
+    });
   };
 
   const start = (mode = state.mode, minutes = mode === 'focus' ? FOCUS : BREAK) => {
